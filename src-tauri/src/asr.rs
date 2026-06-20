@@ -2,7 +2,90 @@ use tauri::AppHandle;
 
 #[tauri::command]
 pub fn transcribe(app: &AppHandle, wav_bytes: &[u8]) -> Result<String, String> {
-    // Get API key from config, fallback to env vars
+    #[cfg(target_os = "macos")]
+    {
+        transcribe_macos(app, wav_bytes)
+    }
+    #[cfg(target_os = "windows")]
+    {
+        transcribe_api(app, wav_bytes)
+    }
+    #[cfg(not(any(target_os = "macos", target_os = "windows")))]
+    {
+        let _ = app;
+        let _ = wav_bytes;
+        Err("Unsupported platform".into())
+    }
+}
+
+#[cfg(target_os = "macos")]
+fn transcribe_macos(app: &AppHandle, wav_bytes: &[u8]) -> Result<String, String> {
+    use std::io::Write;
+    use tauri::Manager;
+
+    // Write WAV to temp file
+    let wav_path = std::env::temp_dir().join(format!("s2w_{}.wav", std::process::id()));
+    let mut f = std::fs::File::create(&wav_path)
+        .map_err(|e| format!("Create temp file: {}", e))?;
+    f.write_all(wav_bytes)
+        .map_err(|e| format!("Write temp file: {}", e))?;
+    drop(f);
+
+    let wav_path_str = wav_path.to_string_lossy().to_string();
+
+    // Get STT helper path from app resource dir
+    let resource_dir = app
+        .path()
+        .resource_dir()
+        .map_err(|e| format!("Resource dir: {}", e))?;
+    let stt_bin = resource_dir.join("bin/s2w_stt");
+
+    // Fallback: try local bin dir (for dev mode)
+    let stt_bin = if stt_bin.exists() {
+        stt_bin
+    } else {
+        let local_bin = std::env::current_exe()
+            .map(|p| p.parent().map(|d| d.join("../bin/s2w_stt")).unwrap_or(stt_bin.clone()))
+            .unwrap_or(stt_bin.clone());
+        if local_bin.exists() {
+            local_bin
+        } else {
+            // Last fallback: check src-tauri/bin/
+            let dev_bin = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("bin/s2w_stt");
+            dev_bin
+        }
+    };
+
+    let lang = crate::store::get_config_inner(app, "lang");
+    let lang_id = match lang.as_str() {
+        "en" => "en-US",
+        "zh" => "zh-CN",
+        _ => "zh-CN",
+    };
+
+    log::info!("Calling SFSpeechRecognizer: {:?} {} {}", stt_bin, wav_path_str, lang_id);
+
+    let output = std::process::Command::new(&stt_bin)
+        .arg(&wav_path_str)
+        .arg(lang_id)
+        .output()
+        .map_err(|e| format!("SFSpeechRecognizer execution failed: {}", e))?;
+
+    // Cleanup temp file if helper didn't
+    let _ = std::fs::remove_file(&wav_path);
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(format!("SFSpeechRecognizer error: {}", stderr.trim()));
+    }
+
+    let text = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    log::info!("SFSpeechRecognizer result: {:?}", text);
+    Ok(text)
+}
+
+#[cfg(target_os = "windows")]
+fn transcribe_api(app: &AppHandle, wav_bytes: &[u8]) -> Result<String, String> {
     let api_key = crate::store::get_config_inner(app, "api_key");
     let api_key = if api_key.is_empty() {
         std::env::var("GROQ_API_KEY")

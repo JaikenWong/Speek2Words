@@ -42,8 +42,8 @@
 
       <!-- Settings Page -->
       <div class="page active" id="page-settings">
-        <!-- API Key -->
-        <div class="card">
+        <!-- API Key (Windows only - macOS uses SFSpeechRecognizer) -->
+        <div class="card api-card">
           <h3>API Key</h3>
           <div class="input-group">
             <input type="password" id="apiKey" placeholder="Enter your API key" />
@@ -54,11 +54,11 @@
               </svg>
             </button>
           </div>
-          <div class="input-hint">Groq, OpenAI or compatible Whisper API key</div>
+          <div class="input-hint">Groq, OpenAI or compatible Whisper API key (Windows)</div>
         </div>
 
-        <!-- API Config -->
-        <div class="card">
+        <!-- API Config (Windows only) -->
+        <div class="card api-card">
           <h3>API Config</h3>
           <div class="form-field">
             <label>Base URL</label>
@@ -73,6 +73,18 @@
         <!-- Hotkey -->
         <div class="card">
           <h3>Hotkey</h3>
+          <div class="hotkey-config">
+            <input type="text" id="hotkey" value="CmdOrCtrl+Shift+KeyK" readonly />
+            <button class="btn" id="changeHotkey">Change</button>
+          </div>
+          <div class="input-hint">Hold hotkey to record, release to transcribe</div>
+        </div>
+
+        <!-- macOS info -->
+        <div class="card platform-info" id="macInfo">
+          <h3>macOS</h3>
+          <div class="input-hint">Uses built-in SFSpeechRecognizer (offline, no API key needed).<br/>Requires: Microphone + Speech Recognition permissions.</div>
+        </div>
           <div class="hotkey-config">
             <input type="text" id="hotkey" value="CmdOrCtrl+Shift+KeyK" readonly />
             <button class="btn" id="changeHotkey">Change</button>

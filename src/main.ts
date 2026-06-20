@@ -11,6 +11,9 @@ let currentHotkey = "CmdOrCtrl+Shift+KeyK";
 let isRecording = false;
 let isChangingHotkey = false;
 
+// ---- Platform detection ----
+const isMac = navigator.platform.toLowerCase().includes("mac");
+
 // ---- DOM helpers ----
 function $(id: string): HTMLElement {
   return document.getElementById(id)!;
@@ -34,6 +37,19 @@ const changeHotkeyBtn = $("changeHotkey") as HTMLButtonElement;
 const langSelect = $select("lang");
 const saveBtn = $("saveBtn") as HTMLButtonElement;
 const toastEl = $("toast");
+
+// ---- Show/hide API config based on platform ----
+const apiCards = document.querySelectorAll<HTMLElement>(".api-card");
+const macInfo = $("macInfo");
+if (isMac) {
+  // macOS uses SFSpeechRecognizer (offline), hide API config
+  apiCards.forEach((card) => {
+    card.style.display = "none";
+  });
+} else {
+  // Windows needs API, hide macOS info
+  macInfo.style.display = "none";
+}
 
 // ---- Toast ----
 let toastTimer: ReturnType<typeof setTimeout>;
