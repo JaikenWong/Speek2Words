@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Speek2Words</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/>
+            <line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+          <span>Speek2Words</span>
+        </div>
+        <div class="status" id="status">
+          <span class="status-dot"></span>
+          <span class="status-text">Ready</span>
+        </div>
+      </header>
+
+      <!-- Recording Indicator -->
+      <div class="recording-indicator" id="recordingIndicator">
+        <div class="pulse-ring"></div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="12" r="6"/>
+        </svg>
+        <span>Recording...</span>
+      </div>
+
+      <!-- Tabs -->
+      <nav class="tabs">
+        <button class="tab active" data-tab="settings">Settings</button>
+        <button class="tab" data-tab="about">About</button>
+      </nav>
+
+      <!-- Settings Page -->
+      <div class="page active" id="page-settings">
+        <!-- API Key -->
+        <div class="card">
+          <h3>API Key</h3>
+          <div class="input-group">
+            <input type="password" id="apiKey" placeholder="Enter your API key" />
+            <button class="btn-icon" id="toggleApiKey" title="Show/Hide">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <div class="input-hint">MiniMax or Whisper-compatible API key</div>
+        </div>
+
+        <!-- API Config -->
+        <div class="card">
+          <h3>API Config</h3>
+          <div class="form-field">
+            <label>Base URL</label>
+            <input type="text" id="baseUrl" value="https://api.minimaxi.com" />
+          </div>
+          <div class="form-field">
+            <label>Model</label>
+            <input type="text" id="model" value="speech-01" />
+          </div>
+        </div>
+
+        <!-- Hotkey -->
+        <div class="card">
+          <h3>Hotkey</h3>
+          <div class="hotkey-config">
+            <input type="text" id="hotkey" value="CommandOrControl+Shift+K" readonly />
+            <button class="btn" id="changeHotkey">Change</button>
+          </div>
+          <div class="input-hint">Hold hotkey to record, release to transcribe</div>
+        </div>
+
+        <!-- Language -->
+        <div class="card">
+          <h3>Language</h3>
+          <select id="lang">
+            <option value="zh">Chinese (zh)</option>
+            <option value="en">English (en)</option>
+            <option value="auto">Auto Detect</option>
+          </select>
+        </div>
+
+        <!-- Save -->
+        <button class="btn btn-primary btn-full" id="saveBtn">Save Settings</button>
+      </div>
+
+      <!-- About Page -->
+      <div class="page" id="page-about">
+        <div class="card">
+          <div class="about-logo">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="23"/>
+              <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+          </div>
+          <h2>Speek2Words</h2>
+          <p class="version">v0.1.0</p>
+          <p class="description">Hold hotkey to talk, release to type text at cursor.</p>
+          <div class="about-links">
+            <a href="https://github.com/JaikenWong/Speek2Words" target="_blank">GitHub</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast -->
+      <div class="toast" id="toast"></div>
+    </div>
+
+    <script src="/src/main.ts" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
+venv/
+build/
+dist/
+*.egg-info/
+node_modules/
+src-tauri/target/
+*.log
