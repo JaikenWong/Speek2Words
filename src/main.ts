@@ -7,7 +7,7 @@ import {
 } from "@tauri-apps/plugin-global-shortcut";
 
 // ---- State ----
-let currentHotkey = "CommandOrControl+Shift+K";
+let currentHotkey = "CmdOrCtrl+Shift+KeyK";
 let isRecording = false;
 let isChangingHotkey = false;
 
@@ -53,7 +53,7 @@ async function loadConfig() {
       ["api_key", () => apiKeyInput, ""],
       ["base_url", () => baseUrlInput, "https://api.minimaxi.com"],
       ["model", () => modelInput, "speech-01"],
-      ["hotkey", () => hotkeyInput, "CommandOrControl+Shift+K"],
+      ["hotkey", () => hotkeyInput, "CmdOrCtrl+Shift+KeyK"],
       ["lang", () => langSelect, "zh"],
     ];
     for (const [key, getEl, def] of pairs) {
@@ -180,7 +180,7 @@ changeHotkeyBtn.addEventListener("click", () => {
     e.stopPropagation();
 
     const parts: string[] = [];
-    if (e.metaKey || e.ctrlKey) parts.push("CommandOrControl");
+    if (e.metaKey || e.ctrlKey) parts.push("CmdOrCtrl");
     if (e.shiftKey) parts.push("Shift");
     if (e.altKey) parts.push("Alt");
 
