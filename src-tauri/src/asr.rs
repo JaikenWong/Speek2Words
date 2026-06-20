@@ -2,20 +2,29 @@ use tauri::AppHandle;
 
 #[tauri::command]
 pub fn transcribe(app: &AppHandle, wav_bytes: &[u8]) -> Result<String, String> {
+    // Get API key from config, fallback to env vars
     let api_key = crate::store::get_config_inner(app, "api_key");
+    let api_key = if api_key.is_empty() {
+        std::env::var("GROQ_API_KEY")
+            .or_else(|_| std::env::var("OPENAI_API_KEY"))
+            .or_else(|_| std::env::var("ASR_API_KEY"))
+            .unwrap_or_default()
+    } else {
+        api_key
+    };
     if api_key.is_empty() {
-        return Err("API key not configured".into());
+        return Err("API key not configured. Set it in Settings or env var GROQ_API_KEY/OPENAI_API_KEY".into());
     }
 
     let base_url = crate::store::get_config_inner(app, "base_url");
     let base_url = if base_url.is_empty() {
-        "https://api.minimaxi.com".to_string()
+        "https://api.groq.com/openai".to_string()
     } else {
         base_url.trim_end_matches('/').to_string()
     };
 
     let model = crate::store::get_config_inner(app, "model");
-    let model = if model.is_empty() { "speech-01".to_string() } else { model };
+    let model = if model.is_empty() { "whisper-large-v3-turbo".to_string() } else { model };
 
     let lang = crate::store::get_config_inner(app, "lang");
     let lang = if lang.is_empty() { "zh".to_string() } else { lang };

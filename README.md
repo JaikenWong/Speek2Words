@@ -35,11 +35,19 @@ npx tauri build
 
 | 配置项 | 默认值 | 说明 |
 |--------|--------|------|
-| API Key | - | MiniMax 或 Whisper 兼容 API Key |
-| Base URL | `https://api.minimaxi.com` | ASR 服务地址 |
-| Model | `speech-01` | 语音模型 |
-| Hotkey | `CommandOrControl+Shift+K` | 录音热键 |
+| API Key | - | Groq / OpenAI 或其他 Whisper 兼容 API Key |
+| Base URL | `https://api.groq.com/openai` | ASR 服务地址（OpenAI 兼容端点） |
+| Model | `whisper-large-v3-turbo` | 语音模型 |
+| Hotkey | `CmdOrCtrl+Shift+KeyK` | 录音热键 |
 | Language | `zh` | 语言（zh/en/auto） |
+
+### 推荐的 ASR 服务
+
+| 服务 | Base URL | Model | 说明 |
+|------|----------|-------|------|
+| [Groq](https://console.groq.com) | `https://api.groq.com/openai` | `whisper-large-v3-turbo` | 免费，速度快 |
+| [OpenAI](https://platform.openai.com) | `https://api.openai.com` | `whisper-1` | 官方 Whisper |
+| [SiliconFlow](https://siliconflow.cn) | `https://api.siliconflow.cn/v1` | `FunAudioLLM/SenseVoiceSmall` | 国内，中文优 |
 
 ## 权限
 

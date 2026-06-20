@@ -54,7 +54,7 @@
               </svg>
             </button>
           </div>
-          <div class="input-hint">MiniMax or Whisper-compatible API key</div>
+          <div class="input-hint">Groq, OpenAI or compatible Whisper API key</div>
         </div>
 
         <!-- API Config -->
@@ -62,11 +62,11 @@
           <h3>API Config</h3>
           <div class="form-field">
             <label>Base URL</label>
-            <input type="text" id="baseUrl" value="https://api.minimaxi.com" />
+            <input type="text" id="baseUrl" value="https://api.groq.com/openai" />
           </div>
           <div class="form-field">
             <label>Model</label>
-            <input type="text" id="model" value="speech-01" />
+            <input type="text" id="model" value="whisper-large-v3-turbo" />
           </div>
         </div>
 
@@ -74,7 +74,7 @@
         <div class="card">
           <h3>Hotkey</h3>
           <div class="hotkey-config">
-            <input type="text" id="hotkey" value="CommandOrControl+Shift+K" readonly />
+            <input type="text" id="hotkey" value="CmdOrCtrl+Shift+KeyK" readonly />
             <button class="btn" id="changeHotkey">Change</button>
           </div>
           <div class="input-hint">Hold hotkey to record, release to transcribe</div>

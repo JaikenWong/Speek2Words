@@ -51,8 +51,8 @@ async function loadConfig() {
   try {
     const pairs: [string, () => HTMLElement, string][] = [
       ["api_key", () => apiKeyInput, ""],
-      ["base_url", () => baseUrlInput, "https://api.minimaxi.com"],
-      ["model", () => modelInput, "speech-01"],
+      ["base_url", () => baseUrlInput, "https://api.groq.com/openai"],
+      ["model", () => modelInput, "whisper-large-v3-turbo"],
       ["hotkey", () => hotkeyInput, "CmdOrCtrl+Shift+KeyK"],
       ["lang", () => langSelect, "zh"],
     ];
